@@ -23,15 +23,15 @@ public class MyCustomMap<K, V> {
         if (current == null) {
             buckets[bucket] = entry;
             size++;
-        }else {
+        } else {
             while (current.next != null) {
-                if (current.key.equals(key)){
+                if (current.key.equals(key)) {
                     current.value = value;
                     return;
                 }
                 current = current.next;
             }
-            if (current.key.equals(key)){
+            if (current.key.equals(key)) {
                 current.value = value;
             } else {
                 current.next = entry;
@@ -41,7 +41,16 @@ public class MyCustomMap<K, V> {
     }
 
     public V get(K key) {
+        Entry<K, V> bucket = buckets[getHash(key) % getBucketSize()];
+        while (bucket != null) {
+            if (bucket.key == key) {
+                return bucket.value;
+            } else {
+                bucket = bucket.next;
+            }
+        }
         return null;
+
     }
 
     private int getBucketSize() {
