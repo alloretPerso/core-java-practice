@@ -39,4 +39,12 @@ public class Entry<K, V> {
     public void setNext(Entry<K, V> next) {
         this.next = next;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 13;
+        hash = 17 * hash + ((key == null) ? 0 : key.hashCode());
+        hash = 17 * hash + ((value == null) ? 0 : value.hashCode());
+        return hash;
+    }
 }
