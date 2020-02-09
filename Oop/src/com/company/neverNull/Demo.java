@@ -14,6 +14,9 @@ public class Demo {
         Article item1 = new Article(moneyBack1, warranty1);
 
         this.claimWarranty(item1);
+
+        Article item2 = new Article(Warranty.VOID, Warranty.VOID);
+        this.claimWarranty(item2);
     }
 
     public void claimWarranty(Article article) {
