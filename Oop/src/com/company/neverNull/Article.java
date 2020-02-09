@@ -1,16 +1,17 @@
 package com.company.neverNull;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class Article {
     private Warranty moneyBackGuarantee;
     private Warranty expressWarranty;
     private Warranty effectiveExpressWarranty;
-    private Part sensor;
+    private Optional<Part> sensor;
     private Warranty extendedWarranty;
 
 
-    private Article(Warranty moneyBackGuarantee, Warranty expressWarranty, Warranty effectiveExpressWarranty, Part sensor, Warranty extendedWarranty) {
+    private Article(Warranty moneyBackGuarantee, Warranty expressWarranty, Warranty effectiveExpressWarranty, Optional<Part> sensor, Warranty extendedWarranty) {
         //Constructor preconditions
         if (moneyBackGuarantee == null) throw new IllegalArgumentException();
         if (expressWarranty == null) throw new IllegalArgumentException();
@@ -23,7 +24,7 @@ public class Article {
     }
 
     public Article(Warranty moneyBackGuarantee, Warranty expressWarranty) {
-        this(moneyBackGuarantee, expressWarranty, Warranty.VOID, null, Warranty.VOID);
+        this(moneyBackGuarantee, expressWarranty, Warranty.VOID, Optional.empty(), Warranty.VOID);
     }
 
     public Warranty getMoneyBackGuarantee() {
@@ -43,7 +44,7 @@ public class Article {
     }
 
     public Article install(Part sensor, Warranty extendedWarranty) {
-        return new Article(this.moneyBackGuarantee, this.expressWarranty, this.effectiveExpressWarranty, sensor, extendedWarranty);
+        return new Article(this.moneyBackGuarantee, this.expressWarranty, this.effectiveExpressWarranty, Optional.of(sensor), extendedWarranty);
     }
 
     public Warranty getExtendedWarranty() {
@@ -51,10 +52,12 @@ public class Article {
         LocalDate detectOn = this.sensor.getDefectDetectedOn();
         if (detectOn == null) return Warranty.VOID;
         return this.extendedWarranty.on(detectOn);*/
-        return this.sensor == null ? Warranty.VOID : this.sensor.apply(this.extendedWarranty);
+        return this.sensor.map(part -> part.apply(this.extendedWarranty)).orElse(Warranty.VOID);
     }
 
     public Article sensorNotOperational(LocalDate detectedOn) {
-        return this.install(this.sensor.defective(detectedOn), this.extendedWarranty);
+        return this.sensor.map(part -> part.defective(detectedOn))
+                .map(defective -> this.install(defective,this.extendedWarranty))
+                .orElse(this);
     }
 }
