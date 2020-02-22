@@ -6,10 +6,16 @@ import java.util.stream.Collectors;
 public class demo {
     public static void main(String[] args) {
         List<Integer> ints = List.of(2, 3, 4);
-        List<String> strings = List.of("Boston","Washington");
+        List<String> strings = List.of("Boston", "Washington");
 
         System.out.println(lambda(ints));
         System.out.println(lambdaWithStrings(strings));
+
+        try{
+            checkMyValues("val1","val2",null);
+        }catch(Exception e1){
+            System.out.println(e1.getMessage());
+        }
         firstCode();
     }
 
@@ -27,5 +33,14 @@ public class demo {
         return strings.stream()
                 .filter(s -> s.equals("Boston"))
                 .collect(Collectors.toList());
+    }
+
+    private static boolean checkMyValues(String string1, String string2, Integer intValue) throws IllegalArgumentException{
+        if (string1 == null || string2 == null || intValue == null) {
+            String msg = String.format("You have provided the following arguments, none of them can be null." +
+                    "string1: %s, string2: %s, intValue: %s", string1, string2, intValue);
+            throw new IllegalArgumentException(msg);
+        }
+        return true;
     }
 }
