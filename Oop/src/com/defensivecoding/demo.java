@@ -1,6 +1,8 @@
 package com.defensivecoding;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class demo {
@@ -43,4 +45,15 @@ public class demo {
         }
         return true;
     }
+    private boolean isValidString(String s){
+        return s == null || s.trim().isEmpty(); //s.isBlank is better solution
+    }
+
+    private boolean isValidEmail (String email){
+        Pattern validEmail =
+                Pattern.compile("^[A-Z0-9._%+-]+@[A-z0-9.-]+\\.[A-z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = validEmail.matcher(email);
+        return matcher.find();
+    }
+
 }
